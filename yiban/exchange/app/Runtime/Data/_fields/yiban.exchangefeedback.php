@@ -1,0 +1,1 @@
+<?php	return array ( 0 => 'exfid', 1 => 'yb_userid', 2 => 'question', 3 => 'answer', 4 => 'time', '_autoinc' => true, '_pk' => 'exfid', '_type' => array ( 'exfid' => 'int(10) unsigned', 'yb_userid' => 'varchar(10)', 'question' => 'text', 'answer' => 'text', 'time' => 'timestamp', ), );?>

@@ -1,0 +1,12 @@
+[ 2018-09-24T09:20:18+08:00 ] 223.104.63.7 /yiban/exchange/
+INFO: [ app_begin ] --START--
+INFO: ReadHtmlCache Behavior ::run [ RunTime:0.000308s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000376s ]
+NOTIC: [8] Undefined index: code /webdata/yiban/exchange/app/Lib/Action/IndexAction.class.php 第 8 行.
+
+[ 2018-09-24T09:21:17+08:00 ] 101.89.29.78 /yiban/exchange/
+INFO: [ app_begin ] --START--
+INFO: ReadHtmlCache Behavior ::run [ RunTime:0.000312s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000382s ]
+NOTIC: [8] Undefined index: code /webdata/yiban/exchange/app/Lib/Action/IndexAction.class.php 第 8 行.
+

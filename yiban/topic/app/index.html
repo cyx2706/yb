@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hi</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+
+    <!-- icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://cdn.bootcss.com/jquery/2.0.1/jquery.min.js"></script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+</head>
+<style>
+    body {
+        background-color: #fcfcfc;
+        background-color: #efebe9;
+        background-color: #f8f8f8;
+    }
+    .header-color {
+
+        background-color: #5a6378 !important;
+
+    }
+    .main-color {
+        /*background-color: #f29c9f !important;*/
+        background-color: #f99498 !important;
+    }
+
+    .none-box-shadow {
+        -webkit-box-shadow:none;
+        box-shadow:none;
+    }
+    .brand-logo {
+        /*PC端*/
+        padding: 0 30px;
+    }
+    .wrapper {
+        position: relative;
+        padding: 0 7px 60px 7px;
+    }
+
+
+    .card .card-title {
+        font-size: 18px;
+    }
+
+
+    .loading {
+        position: absolute;
+        left:50%;
+        bottom: 5px;
+        transform: translateX(-50%);
+        padding-top: 2px;
+        /*display: none;*/
+    }
+</style>
+<body>
+
+<!--  -->
+
+
+<nav class="nav-extended none-box-shadow">
+    <!--tabs-->
+    <div class="nav-content">
+        <ul class="tabs tabs-transparent">
+            <li class="tab"><a class="active" href="#official">易班话题</a></li>
+            <li class="tab"><a href="#unofficial">自由话题</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div id="official" class="wrapper">
+
+    <div class="card none-box-shadow">
+        <div class="card-content">
+            <div>
+                <span style="color: #ffab40">
+                    <i class="tiny material-icons">access_time</i> 每日话题
+                </span>
+                <span class="right" style="color: #999999">
+                    <i class="tiny material-icons">visibility</i> 5
+                    <i class="tiny material-icons">mode_comment</i> 50
+                    <i class="tiny material-icons">keyboard_arrow_up</i> 200
+                    <i class="tiny material-icons">keyboard_arrow_down</i> 0
+                </span>
+            </div>
+            <span class="card-title">
+                <!--location_on-->
+                very very very long title
+                <!--如果我是有钱人-->
+            </span>
+            <p>something here...</p>
+        </div>
+        <!--<div class="card-action">
+            &lt;!&ndash;<a href="#"><i class="material-icons">arrow_drop_up</i></a>&ndash;&gt;
+            &lt;!&ndash;<a href="#"><i class="material-icons">arrow_drop_down</i></a>&ndash;&gt;
+            <a href="#"><i class="material-icons">create</i></a>
+            &lt;!&ndash;star&ndash;&gt;
+            <a href="#"><i class="material-icons">star_border</i></a>
+
+
+            <a href="#"><i class="material-icons">delete</i></a>
+        </div>-->
+    </div>
+
+    <div class="card none-box-shadow">
+        <div class="card-content">
+            <div>
+                <span style="color: #666666">
+                    <i class="tiny material-icons">lightbulb_outline</i> 用户话题
+                </span>
+                <span class="right" style="color: #999999">
+                    <i class="tiny material-icons">visibility</i> 5
+                    <i class="tiny material-icons">mode_comment</i> 50
+                    <i class="tiny material-icons">keyboard_arrow_up</i> 200
+                    <i class="tiny material-icons">keyboard_arrow_down</i> 0
+                </span>
+            </div>
+            <div class="card-title">
+                <!--location_on-->
+                very very very long title
+            </div>
+            <p>something here...</p>
+        </div>
+    </div>
+
+    <!-- 加载中 -->
+    <div class="btn-floating btn white loading">
+        <div class="preloader-wrapper small active">
+            <div class="spinner-layer">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+            </div><div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="unofficial" class="wrapper">
+</div>
+
+
+<!-- 漂浮按钮 -->
+<div class="fixed-action-btn horizontal click-to-toggle">
+    <a class="btn-floating btn-large waves-effect waves-light">
+        <i class="material-icons">mode_edit</i>
+    </a>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+</script>
+
+
+</body>
+</html>

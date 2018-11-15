@@ -1,0 +1,101 @@
+<php>
+    /*
+
+    <!-- 发布话题 -->
+    <div id="topic-editor" class="editor" style="display: block">
+        <form>
+            <!-- 标题(一句话概括) -->
+            <div class="edit-area main-bg-color">
+                <div class="input-field">
+                    <input id="topic-title-editor" type="text" data-length="100" name="title"/>
+                    <label for="topic-title-editor">请在这里简要地表述主题</label>
+                </div>
+            </div>
+
+            <!-- 详细叙述 -->
+            <div class="edit-area" style="height: 200px;overflow-y: auto">
+                <div class="input-field">
+                    <textarea data-length="300" id="topic-content-editor" class="materialize-textarea" name="content"></textarea>
+                    <label for="topic-content-editor">请在这里详细叙述~</label>
+                </div>
+            </div>
+        </form>
+
+        <if condition="0">
+            <!-- 标题(一句话概括) -->
+            <div class="edit-area main-bg-color">
+                <div class="input-field" style="margin-bottom: 20px;">
+                    <input id="topic-title-editor" type="text" data-length="100" name="title"/>
+                    <label for="topic-title-editor">请在这里简要地表述主题</label>
+                </div>
+            </div>
+
+            <!-- 详细叙述(CK EDITOR) -->
+            <div class="edit-area" style="height: 200px;overflow-y: auto">
+
+            </div>
+        </if>
+
+    </div>
+    */
+</php>
+
+<!-- 发布评论 -->
+<div id="comment-editor" class="editor">
+    <form>
+        <!-- 详细叙述 -->
+        <div class="edit-area main-bg-color">
+            <div class="input-field">
+                <textarea name="content" data-length="300" id="comment-content-editor" class="materialize-textarea"></textarea>
+                <label for="comment-content-editor">期待您精彩的评论~</label>
+            </div>
+            <span>
+            <input type="hidden" name="tid"/>
+            <input type="hidden" name="lid"/>
+            </span>
+            <input type="hidden" name="touid"/>
+
+        </div>
+
+        <!-- 文件上传区域 -->
+        <div class="edit-area">
+            <div class="file-field input-field left" style="width: 90%">
+                <div class="btn">
+                    <span>来一张表情包?</span>
+                    <input type="file" name="img" accept="image/*"/>
+                </div>
+                <div class="file-path-wrapper">
+                    <input placeholder="大小不能超过{:C('MAX_UPLOAD_SIZE')}M" class="file-path validate" type="text"/>
+                </div>
+            </div>
+
+            <span class="file-field input-field left" style="position: relative;width: 10%">
+                <span class="btn-floating btn-small del-img red upload-cancel">×</span>
+            </span>
+        </div>
+    </form>
+
+</div>
+
+<php>
+    /*
+
+    <!-- 发布生活圈 -->
+    <div id="lives-editor" class="editor">
+        <!-- 文本编辑区域 -->
+        <div class="main-bg-color main-edit-area">
+            <textarea placeholder="分享你的所见所闻"></textarea>
+        </div>
+        <!-- 文件上传区域 -->
+        <div class="upload-area">
+        </div>
+
+    </div>
+
+    */
+</php>
+
+<!-- 提交 -->
+<div class="fixed-action-btn">
+    <a id="edit-sub"  class="btn-floating btn-large waves-effect waves-light"><i class="material-icons right">send</i></a>
+</div>

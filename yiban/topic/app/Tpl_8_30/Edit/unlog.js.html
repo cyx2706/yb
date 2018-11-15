@@ -1,0 +1,13 @@
+<script>
+    (function ($) {
+        EditLoad = function() {
+            var $in = $("input[name='redirect_uri']");
+            $in.val($in.data('url'));
+
+            var $state = $("input[name='state']");
+            $state.val($state.data('val')+'/'+$.getHash());
+
+            $('#editPage form').submit();
+        }
+    })(jQuery)
+</script>

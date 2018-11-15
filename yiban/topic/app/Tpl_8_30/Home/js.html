@@ -1,0 +1,140 @@
+<script type="text/javascript">
+
+    (function($) {
+        var module = '';
+
+        HomeLoad = function(mdl) {
+            // 其他页面保证跳转时锚点正确即可
+            if ( !module.length) {
+                module = $.getHashArr()[1];
+                if (module == 'lives') {
+                    $("#homePage .tab a[href='#lives']").click();
+                }
+                else {
+                    $("#homePage .tab a[href='#yiban']").click();
+                    module = 'yiban';
+                }
+            }
+            console.log('HomeLoad');
+
+        };
+
+       /**
+        * error ajax的错误处理函数
+        * appendCallback($newItem,i,appendObj) 插入每个新元素的回调函数
+        * complete 完成所有动作的函数
+        */
+        $(document).ready(function () {
+
+            var homePagefunction  = function(slctr,tplId,url,type) {
+                // 设定选择器
+                this.selector = slctr;
+
+                this.maxLoadNum = parseInt("{:C('TOPIC_NUM_A_PAGE')}");
+
+                // 设定模板id
+                this.templateId = tplId;
+
+                // 设定判断是否符合active状态判定函数
+                this.isActive = function () {
+                    return $("#homePage .tab a[href='"+slctr+"']").hasClass('active') && module == slctr.replace('#','');
+                };
+
+                // 展示loading信息
+                this.showLoading = function () {
+                    $(slctr).css('padding-bottom','60px');
+                    $(slctr).find('.loading').show();
+                };
+                // 展示loading信息
+                this.hideLoading = function () {
+                    $(slctr).css('padding-bottom','10px');
+                    $(slctr).find('.loading').hide();
+                };
+
+                // ajax相关
+                this.url = url;
+
+                // 易班话题还是生活圈
+                this.args = {type : type};
+
+                // 设定回调
+                this.calls = [
+                    // 当滑动到底部时自动执行
+                    function (execute) {
+                        var _hash = $(this).data('hash-page');
+                        $(window).scroll(function () {
+                            var scrollTop = $(document).scrollTop();
+
+                            // 如果当前页是活动状态
+                            if ($.getHashRoot() == _hash) {
+                                // 是否已经滑动到页面底部
+                                if ($(document).height() - $(window).height() - scrollTop <= 0) {
+                                    // 并且执行成功
+                                    var exec = execute();
+                                    if (exec.result) {
+                                        console.log('滑动到底部加载...'+slctr, exec.log);
+                                    }
+                                }
+                            }
+                        });
+                    },
+
+                    // 当tab被点击时,并且没有加载过的时候执行
+                    function (execute) {
+                        $("#homePage .tab a[href='"+slctr+"']").click(function () {
+                            // 改变模块
+                            module = slctr.replace('#','');
+
+                            // 执行初始化
+                            var exec = function() {
+                                if ( $(slctr).data('pageCounter') < 1 ) {
+                                    var exc = execute();
+                                    if (exc.result) {
+                                        console.log('被点击,而且之前没有加载过');
+                                    }
+                                    else {
+                                        console.log('执行失败',exc.log);
+                                    }
+                                }
+                            };
+                            if ($(this).hasClass('active')) {
+                                exec();
+                            }
+                            else {
+                                setTimeout(exec,10);
+                            }
+                        });
+                    }
+                ];
+
+                // ajax错误的回调
+                this.error = function (xhr,status,error) {
+                    console.log('ajax错误',arguments);
+                };
+                
+                // 每个元素插入之后的回调
+                this.appendCallback = function ($newItem,i,appendObj) {
+                    if (parseInt(appendObj.status) > 1) {
+                        $newItem.find('.nick').addClass('public-nick');
+                    }
+                    // console.log(appendObj);
+                };
+
+                // 无论是success还是error都会执行的
+                this.complete = function (xhr,status) {
+                    console.log('关闭loadding');
+                }
+            };
+
+
+            $('#homePage')
+                    .buildLoadMoreModel(new homePagefunction('#yiban','yibanBriefTpl',"{:U('Home/load')}",1))
+//                    .buildLoadMoreModel(new homePagefunction('#lives','livesBriefTpl',"{:U('Home/load')}",2));
+
+
+        });
+    })(jQuery);
+
+
+
+</script>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>奖品兑换</title>
+    <include file="Public:head"/>
+</head>
+<include file="Edit:css"/>
+
+<body>
+<form>
+    <div class="edit-area main-bg-color">
+        <div class="input-field">
+            <input id="topic-title-editor" type="text" data-length="10" name="code"/>
+            <label for="topic-title-editor">在这里输入兑换码</label>
+        </div>
+    </div>
+</form>
+<div id="info" style="text-align: center;margin-top: 10px;">
+    <if condition="$ticket neq null">
+        <div style="font-size: 20px;">{$ticket.content}</div>
+    <else />
+        <a class="waves-effect waves-light btn">点击这里马上兑换!</a>
+    </if>
+</div>
+<ul style="margin-top: 10px;color: #999999;padding: 10px;">
+    领取奖品方法:
+    <li>请关注微信公众号 GDPU易班,我们会在9月6日前发布奖品领取通知(详情见微信推文)</li>
+</ul>
+<script>
+    $(document).ready(function ($) {
+        var ajaxLock = false;
+        $('.btn').click(function () {
+            Materialize.toast('正在拼命为您传输信息,请稍等...', 2000);
+            if (!ajaxLock) {
+                ajaxLock = true;
+                $.ajax({
+                    url : "{:U('ExTicket/index')}",
+                    type : 'POST',
+                    data : $('form').serialize(),
+                    dataType:'json',
+                    success : function(obj) {
+                        console.log(obj);
+                        // 提示失败原因
+                        if (obj.status == 0 || obj.status == false) {
+                            Materialize.toast('<font class="red-text">'+obj.info+'</font>', 2000);
+                        }
+                        // 提交成功
+                        else {
+                            $('#info').empty().append('<div style="font-size: 20px;">'+obj.info+'</div>');
+                            Materialize.toast('<div style="font-size: 20px;">'+obj.info+'</div>', 4000);
+                        }
+                    },
+                    error : function(obj) {
+                        Materialize.toast('<font class="red-text">emmmm...网络状态不是很好,检查一下您的网络?</font>', 2000);
+                    },
+                    complete:function () {
+                        ajaxLock = false;
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

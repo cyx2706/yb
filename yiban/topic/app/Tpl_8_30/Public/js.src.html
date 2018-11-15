@@ -1,0 +1,214 @@
+<script>
+    (function ($) {
+        $.extend({
+
+            /**
+             * 获取hash字符串
+             * @return string hash
+             */
+            getHash     : function () {
+                var _hash = location.hash.replace('#','');
+                return _hash ? _hash : '';
+            },
+
+            /**
+             * @return string hash[0]
+             */
+            getHashRoot : function () {
+                return $.getHash().split('/')[0];
+            },
+
+            /**
+             * @example #a/b/c return ['a','b','c']
+             * @return Array
+             */
+            getHashArr  : function () {
+                return $.getHash().split('/');
+            },
+
+            /**
+             * 获取模板
+             * @param selector string
+             * @param save boolean
+             * @return str 模板内容
+             */
+            getTpl      : function (selector,save) {
+                var tpl = $(selector).html();
+                if (! save ) {      $(selector).remove(); }
+                return tpl;
+            },
+
+            /**
+             * 编译模板
+             * @param tpl string
+             * @param obj {*}
+             * @return str 编译之后的模板
+             */
+            compile     : function (tpl,obj) {
+                var bindVars = tpl.match(/[{][{][^{}]+[}][}]/g);
+                $.each(bindVars,function (j,bindVar) {
+                    var key = $.trim(bindVar.replace(/[{}]/g,''));
+                    tpl = tpl.replace(bindVar,obj[key]);
+                });
+                return tpl;
+            }
+        });
+
+        $.fn.extend({
+
+            loadMore : function (config) {
+                var scrollTop = $(document).scrollTop();
+                var _isActive = (config.isActive ? config.isActive() : false);
+                var _More = ! $(config.selector).data('noMore');
+                var _ajaxActive = ! $(config.selector).data('ajaxActive');
+
+                // 如果当前页是活动状态
+                if (_isActive
+                        // 并且还没加载完
+                        && _More
+                        // 当前没有进行请求
+                        && _ajaxActive) {
+
+                    // 设置ajax锁,防止多次请求
+                    $(config.selector).data('ajaxActive' , true);
+
+                    // 显示加载中
+                    config.showLoading ? config.showLoading() : (function () { console.log('正在加载中...') })();
+
+                    $.ajax({
+                        url     : config.url,
+                        type    : 'GET',
+                        data    : $.extend(true,new function(){
+                            this.page    = $(config.selector).data('pageCounter')+1;
+                            if ($(config.selector).data('fstpk')) this.fst = $(config.selector).data('fstpk'); },config.args),
+                        dataType: 'json',
+                        cache   : false,
+                        error   : function (xhr,status,error) {
+                            config.error(error,xhr,status);
+                        },
+                        success : function (res,status,xhr) {
+                            //TODO if (!res.status) config.error(error,xhr,status)
+                            var appendObjs = res;
+
+                            // 将每个数据根据模板规则插入到容器当中
+                            $.each(appendObjs,function (i,appendObj) {
+
+                                // 编译前数据处理
+                                config.beforeCompile ?
+                                        config.beforeCompile(i,appendObj)
+                                        : null;
+
+                                // 编译模板
+                                var tpl = $.compile(config.template,appendObj);
+
+                                // 插入dom
+                                $(config.selector)[config.handle ? config.handle : 'append'](tpl);
+
+                                // 插入之后的回调
+                                config.appendCallback($(config.selector).children(':last'),i,appendObj);
+                            });
+
+                            // 滑动到之前保存的位置
+                            $(document).scrollTop(scrollTop);
+
+                            // 判断是否已经没有了,没有了的就不再加载
+                            if (!appendObjs || appendObjs.length < config.maxLoadNum) {
+                                // 不再加载
+                                $(config.selector).data('noMore',true);
+
+                                // 执行不再加载的回调函数
+                                config.end ?
+                                        config.end() : (function () { console.log('已经没有了,不再加载..'); })();
+                            }
+                            else if ( !$(config.selector).data('pageCounter') && config.pkName ) {
+                                $(config.selector).data('fstpk', appendObjs[0][config.pkName]);
+                            }
+
+                            // 页数计算器+1
+                            $(config.selector).data('pageCounter',   $(config.selector).data('pageCounter')+1);
+
+                            // 解锁
+                            $(config.selector).data('ajaxActive',   false);
+
+                        },
+                        complete: function (xhr,status) {
+
+                            // 显示加载中
+                            config.hideLoading
+                                    ? config.hideLoading()
+                                    : (function () { console.log('正在加载中...') })();
+
+                            config.complete
+                                    ? config.complete(xhr,status)
+                                    : (function () { console.log('ajax完成') })();
+                        },
+                    });
+
+                    return { result:true };
+                } else {
+                    return {
+                        result : false,
+                        log : {
+                            _isActive:_isActive,
+                            _More     :_More,
+                            _ajaxActive:_ajaxActive
+                        }
+                    };
+                }
+            },
+
+            /**
+             * 用于page-wrapper类元素建立上拉加载更多的模型
+             * @param config {*}
+             * maxLoadNum                           最多加载元素的数量
+             * isActive()                           表示当前页是否正处在活动状态的函数
+             * showLoading()                        执行展示loading信息的函数,在ajax前调用
+             * hideLoading()                        执行完成之后调用的函数,关闭loading
+             * selector                             必选 $(config.selector)[config.handle](template);
+             * template | templateId                必选 插入元素的模板
+             * handle                               可选 默认是append
+             * pkName                               可选 主键名称
+             * calls Array                          必选 回调函数
+             * end()                                可选 已经加载完之后的回调函数
+             *
+             * url                                  必选 ajax的url
+             * args {*}                             可选 ajax的其他参数
+             * error(error,xhr,status)              必选 ajax的错误处理函数
+             * beforeCompile(i,appendObj)           可选 编译之前的数据处理函数
+             * appendCallback($newItem,i,appendObj) 可选 插入每个新元素的回调函数
+             * complete(xhr,status)                 可选 完成所有动作的函数
+             */
+            buildLoadMoreModel : function (config) {
+                $(this).each(function () {
+                    // 是否已经加载完毕
+                    $(config.selector).data('noMore',       false);
+
+                    // 是否正在执行ajax
+                    $(config.selector).data('ajaxActive',   false);
+
+                    // 表示已经加载到第几页,默认就是0
+                    $(config.selector).data('pageCounter',   0);
+
+                    // 记录第一个主键id的值
+                    if (config.pkName) $(config.selector).data('fstpk',   -1);
+
+                    // 寻找模板
+                    config.template = !config.template && config.templateId
+                            ? $.getTpl('#'+config.templateId)
+                            : config.template;
+
+                    var $this = $(this);
+
+                    // 执行所有回调
+                    $.each(config.calls,function (i,call) {
+                        // 成为临时函数
+                        $.fn.extend({ _tmp : call });
+                        // 执行临时函数
+                        $this._tmp(function () {   return $this.loadMore(config);  });
+                    });
+                });
+                return $(this);
+            }
+        });
+    })(jQuery)
+</script>

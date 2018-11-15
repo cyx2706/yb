@@ -1,0 +1,161 @@
+<div class="navbar-fixed" style="height: 50px;">
+    <nav class="nav-extended none-box-shadow overflow-hidden">
+        <!--tabs-->
+        <div class="nav-content">
+            <ul class="tabs tabs-transparent">
+                <!-- class="active" -->
+                <li class="tab"><a data-location="#content">详情</a></li>
+                <li class="tab"><a data-location="#comments">评论</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
+
+<div class="tab-wrapper">
+
+    <!-- 阅读区 -->
+    <div id="content" class="card none-box-shadow">
+
+        <div class="card-content">
+            <php>/* topic模板 */</php>
+            <script type="text/html" id="showTopicTpl">
+                <!-- 标题 -->
+                <div class="card-title center-align">{{title}}</div>
+                <!-- 正文内容 -->
+                <p class="break-word">{{content}}</p>
+            </script>
+        </div>
+
+    </div>
+
+    <!--热门评论区-->
+    <div id="hot-comments" class="card none-box-shadow" style="display: none">
+        <div class="card-content">
+
+            <div class="right-align" style="color: #999999">
+                热门评论
+            </div>
+
+            <!-- 评论区 -->
+            <div class="comment-wrappers" style="padding-bottom: 20px;"></div>
+        </div>
+
+    </div>
+
+
+    <!-- 评论区 -->
+    <div id="comments" class="card none-box-shadow" style="display: none">
+        <div class="card-content">
+
+            <div class="right-align">
+                <a id="flush-comments">
+                    <i  class="tiny material-icons">loop</i>
+                    刷新评论
+                </a>
+            </div>
+
+            <!-- 评论区 -->
+            <div class="comment-wrappers" style="padding-bottom: 20px;"></div>
+
+            <div class="center-align" id="nomore-comments" style="width: 100%;display: none;">就只有这么多评论了...</div>
+
+            <!-- 加載中模板 -->
+            <span id="comments-loading" style="margin-left: 50%;position: relative;">
+                <div  class="tranX-50" style="position: absolute;left:50%;top:-15px;">
+                <div class="preloader-wrapper small active">
+                    <div class="spinner-layer">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </span>
+
+
+        </div>
+    </div>
+
+</div>
+
+<php>
+    /*
+    <include file="Comp:loading"/>
+    */
+</php>
+
+
+<!-- 编辑按钮 -->
+<div class="fixed-action-btn">
+    <a id="edit-comment-btn" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">mode_comment</i></a>
+</div>
+
+
+
+<php>/* 评论模板 */</php>
+<script type="text/html" id="commentTpl">
+    <div class="comment-wrapper" data-commentid="{{cmid}}">
+
+        <!--头像-->
+        <div class="comment-userhead-wrapper">
+            <img class="comment-userhead" src="{{yb_userhead}}"/>
+        </div>
+
+        <!-- 用户昵称 -->
+        <div class="comment-nick-wrapper">
+            <span class="nick truncate">{{nick}}</span>
+
+            <php>/* 只有管理员才有管理工具 */</php>
+
+            <if condition="$isAdm">
+                                <span class="manage-comment-tools">
+                                    <a class="recommend-comment"
+                                       style="display: none">上墙</a>
+                                    <a class="red-text recommend-cancel"
+                                       style="display: none">取消</a>
+                                    |
+                                    <a class="block-comment"
+                                       style="display: none">屏蔽</a>
+
+                                    <a class="red-text show-comment"
+                                       style="display: none">显示</a>
+                                </span>
+            </if>
+        </div>
+
+        <!-- 内容 -->
+        <div class="comment-content" style="background-color: #eeeeee;float: left;width: 70%;position: relative;padding: 10px;">
+
+            <!-- 三角形 -->
+            <p style="
+                    position: absolute;
+                    border: 8px solid #eeeeee;
+                    top: 5px;left: -16px;
+
+                    border-top: 8px transparent solid;
+                    border-bottom: 8px transparent solid;
+                    border-left: 8px transparent solid;
+                    "></p>
+            <!-- 评论内容 -->
+            <div>
+                {{content}}
+            </div>
+
+            <!-- 图片 -->
+            <div class="comment-img-wrapper">
+                <img src="{{src}}"/>
+            </div>
+        </div>
+
+        <!-- 其他 -->
+        <div class="left right-align comment-tools" style="width: 100%;margin-top: 5px;">
+            <span class="comment-time">{{addtime}}</span>
+        </div>
+    </div>
+</script>

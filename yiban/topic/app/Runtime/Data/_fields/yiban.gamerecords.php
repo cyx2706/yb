@@ -1,0 +1,1 @@
+<?php	return array ( 0 => 'yb_userid', 1 => 'score', 2 => 'time', '_autoinc' => false, '_pk' => 'yb_userid', '_type' => array ( 'yb_userid' => 'varchar(10)', 'score' => 'int(11)', 'time' => 'timestamp', ), );?>

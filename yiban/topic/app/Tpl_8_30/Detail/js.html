@@ -1,0 +1,286 @@
+<script>
+    (function ($) {
+        // 当前id
+        var current = '';
+
+        // 两种取值之一,content 或 comment 阅读区和评论区
+        var module = '';
+
+        // 话题的模板
+        var topicTpl = $.getTpl('#showTopicTpl');
+
+        var cmmntTpl = $.getTpl('#commentTpl');
+
+        var loadMoreComments = function () {  };
+
+        // 强行刷新评论区
+        var flushComments = function (type,id) {
+
+            if (arguments.length<2) {
+                type    = current.split('/')[0];
+                id      = current.split('/')[1];
+            }
+
+            // 不显示没有提示
+            $('#nomore-comments').hide();
+            // 清空评论区
+            $('#comment-wrappers').empty();
+            // 显示评论区
+            $('#comments').show();
+
+            // 每次打开新的文章就重新建立模型
+            $('#detailPage').buildLoadMoreModel(new function () {
+
+                this.maxLoadNum = parseInt("{:C('CMMNT_NUM_A_PAGE')}");
+
+                this.isActive = function () { return true; };
+
+                this.showLoading = function () {
+                    $('#comments-loading').show();
+                };
+
+                this.hideLoading = function () {
+                    $('#comments-loading').hide();
+                };
+
+                this.end = function () {
+                    $('#nomore-comments').show();
+                };
+
+                this.selector = '#comment-wrappers';
+
+                this.template = cmmntTpl;
+
+                this.calls = [
+                    function (execute) {
+                        loadMoreComments = execute;
+                        var exc = execute();
+                        if (!exc.result) {
+                            console.log(exc.log);
+                        }
+                    }
+                ];
+
+
+                // 这个也是判断类型
+                this.url = "{:U('Detail/loadComments')}";
+
+                // 应该判断类型type
+                this.args = { tid : id };
+
+                // 主键名称
+                this.pkName = 'cmid';
+
+                this.appendCallback = function ($comment,i,appendObj) {
+                    // 有图片就加上图片
+                    if (appendObj.src != null) {
+                        $comment.find('.comment-content').append(
+                                '<div class="comment-img-wrapper">' +
+                                '<img src="'+appendObj.src+'"/>' +
+                                '</div>');
+                    }
+
+                    // 公众号高亮显示
+                    if (parseInt(appendObj.status) > 1) {
+                        $comment.find('.nick').addClass('public-nick');
+                    }
+
+                    // 只显示自己的工具栏
+                    if (appendObj.uid == '{$uid}') {
+                        $comment.find('.comment-tools').prepend(
+                                '<span class="user-comment-tools">' +
+                                '<a class="comment-del">删除</a> |' +
+                                '</span>');
+
+                        $comment.find('.comment-del').data('id',appendObj.cmid);
+                    }
+                    // 显示非自己的工具栏
+                    else {
+                        $comment.find('.comment-tools').prepend(
+                                '<span class="other-comment-tools">' +
+                                '<!--<a>@TA</a> |-->' +
+                                '</span>');
+                    }
+
+                    // 如果是管理员
+                    if (parseInt('{$isAdm}')) {
+                        if (appendObj.status) {
+                            $comment.find('.comment-nick-wrapper').append(
+                                    '<span class="adm-comment-tools">' +
+                                    '<a class="block-comment">屏蔽此评论</a>' +
+//                                    ' | <a class="block-user">屏蔽此人</a>' +
+                                    '</span>');
+                        }
+                        else {
+                            $comment.find('.comment-nick-wrapper').append(
+                                    '<span class="adm-comment-tools">' +
+                                    '<a class="red-text show-comment">恢复此评论</a>' +
+//                                    ' | <a class="red-text block-user">恢复此人</a>' +
+                                    '</span>');
+                        }
+
+                        $comment.find('.block-comment').data('id',appendObj.cmid);
+
+                    }
+                };
+
+                this.error = function () {
+                    Materialize.toast('<font class="red-text">'+'网络错误'+'</font>', 1000);
+                };
+
+                this.complete = function () {
+                }
+            });
+        };
+
+        DetailLoad = function(data) {
+            var hashArr =  $.getHashArr();
+            var type = hashArr[1];
+            var id = hashArr[2];
+            if ( current != type+'/'+id) {
+                var url = '';
+                var tpl = '';
+                switch (type) {
+                    case 'topic':
+                        url = "{:U('Detail/getTopic')}";
+                        tpl = topicTpl;
+                        break;
+                }
+
+                // 修改评论按钮的锚点
+                $('#edit-comment-btn').attr('href','#edt/comment/'+type+'/'+id);
+                // 隐藏评论区
+                $('#comments').hide();
+
+                // 显示正在加载中
+                $('#content .card-content').html('<div class="center-align">正在加载中...</div>');
+
+                $(document).scrollTop(0);
+
+                $.get(  url,
+                        {  id : id },
+                        function (obj) {
+                            // 编译到模板
+                            $('#content .card-content').html($.compile(tpl,obj));
+                            // 刷新评论区
+                            flushComments(type,id);
+                        },
+                        'json');
+
+                current = type+'/'+id;
+            }
+
+            // $("#detailPage .tab a[data-location='#content']").click();
+
+            // console.log('DetailLoad');
+        };
+
+
+
+        $(document).ready(function ($) {
+
+            // 点击刷新评论刷新dom
+            $('#flush-comments').click(flushComments);
+
+            var contentHeight = 0;
+            function getContentHeight() {
+                return contentHeight
+                        ? contentHeight
+                        : (contentHeight = $('#detailPage #content').height()
+                            + parseInt($('#detailPage #content').css('margin-top').match(/[0-9]*/)[0]));
+                            //+ parseInt($('#detailPage #content').css('margin-bottom').match(/[0-9]*/)[0]));
+            }
+
+            // 锚点定位
+            $("#detailPage .tab a[data-location]").click(function () {
+                var moduleTarget = $(this).data('location').replace('#','');
+                if (moduleTarget != module) {
+                    if (moduleTarget == 'content') {
+                        $(document).scrollTop(0);
+                    }
+                    else {
+                        // 主体内容的高度
+                        $(document).scrollTop(getContentHeight());
+                    }
+                    module = moduleTarget;
+                }
+            });
+
+            // 滑动监听
+            var _hash = $('#detailPage').data('hash-page');
+            $(window).scroll(function () {
+                var scrollTop = $(document).scrollTop();
+                if ($.getHashRoot() == _hash) {
+                    var moduleTarget;
+
+                    if (scrollTop < getContentHeight())
+                    { moduleTarget = 'content'; }
+                    else
+                    { moduleTarget = 'comments'; }
+
+
+                    if (module != moduleTarget) {
+                        //console.log(moduleTarget);
+                        module = moduleTarget;
+                        $("#detailPage .tab a[data-location='#"+module+"']").click();
+                    }
+
+
+                    // 是否已经滑动到页面底部
+                    if ($(document).height() - $(window).height() - scrollTop <= 0) {
+                        // 并且执行成功
+                        var exec = loadMoreComments();
+                        if (exec.result) {
+                            console.log('滑动到底部加载...'+exec.log);
+                        }
+                    }
+                }
+            });
+
+            $('#detailPage').on('click','.comment-del,.block-comment,.show-comment',function () {
+                var $this = $(this);
+                var url;
+                var callback;
+                if ( $this.is('.comment-del') ) {
+                    if (!confirm('真的要删除吗')) return;
+                    url = "{:U('Comment/del')}";
+                    callback = function (obj) {
+                        $this.parents('.comment-wrapper').remove();
+                    }
+                }
+                else if ( $this.is('.block-comment') ) {
+                    if (!confirm('真的要屏蔽吗')) return;
+                    url = "{:U('Adm/blockComment')}";
+                }
+                else if ( $this.is('.show-comment') ) {
+                    if (!confirm('真的要屏蔽吗')) return;
+                    url = "{:U('Adm/showComment')}";
+                }
+
+                $.ajax({
+                    url :       url,
+                    type:       "POST",
+                    dataType:   'json',
+                    data:   {
+                        id : $this.data('id')
+                    },
+                    success:    function (obj) {
+                        if (obj.status) {
+                            Materialize.toast('<font class="green-text">'+obj.info+'</font>', 1000);
+                            callback(obj);
+                        }
+                        else {
+                            Materialize.toast('<font class="red-text">'+obj.info+'</font>', 1000);
+                        }
+                    },
+                    error:      function () {
+                        Materialize.toast('<font class="red-text">网络错误,操作失败</font>', 1000);
+                    }
+                });
+            });
+        });
+
+
+    })(jQuery);
+
+</script>

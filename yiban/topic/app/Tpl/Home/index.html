@@ -1,0 +1,83 @@
+<nav class="nav-extended none-box-shadow">
+    <!--tabs-->
+    <div class="nav-content">
+        <ul class="tabs tabs-transparent overflow-hidden">
+            <!--class="active" -->
+            <li class="tab"><a href="#yiban" data-module="yiban">易班栏目</a></li>
+            <li class="tab"><a href="#lives">更多<!--<span class="new badge"></span>--></a></li>
+        </ul>
+    </div>
+</nav>
+<div id="tab-wrappers">
+
+    <!-- 易班官方话题 -->
+    <div id="yiban" class="tab-wrapper">
+
+        <script id="yibanBriefTpl" type="text/html">
+            <div class="card none-box-shadow brief" data-tid="{{tid}}">
+                <div class="card-content">
+
+                    <div class="brief-top">
+                        <span style="position: absolute;top: 0;left: 0">
+                            <img src="{{yb_userhead}}" style="width: 40px;height: 40px;border-radius:20px;"/>
+                        </span>
+                        <span class="nick">
+                            <font style="line-height: 40px;">{{nick}}</font>
+                        </span>
+                        <span class="right" style="color: #999999">
+                            <font class="brief-time" style="line-height: 40px;">{{updtime}}</font>
+                        </span>
+                    </div>
+
+                    <!-- 标题 -->
+                    <a class="card-title brief-title" href="#detail/topic/{{tid}}">{{title}}</a>
+                    <p class="brief-content">{{content}}</p>
+                </div>
+            </div>
+        </script>
+
+
+        <include file="Comp:loading"/>
+
+    </div>
+
+    <!-- 更多 -->
+    <div id="lives"  class="tab-wrapper">
+        <div class="center-align" style="padding: 50px;">功能正在测试中,敬请期待~</div>
+
+        <php>
+            /*
+            <!-- 模板 -->
+            <script id="livesBriefTpl" type="text/html">
+                <div class="card none-box-shadow brief">
+                    <div class="card-content">
+
+                        <div>
+                    <span style="color: #ffab40">
+                        <i class="tiny material-icons">access_time</i> 每日话题
+                    </span>
+                        </div>
+
+                        <!-- 标题 -->
+                        <a class="card-title brief-title" href="#detail/topic/{{tid}}">{{title}}</a>
+                        <p class="brief-content">{{content}}</p>
+                    </div>
+                </div>
+            </script>
+
+            <include file="Comp:loading"/>
+            */
+        </php>
+
+    </div>
+
+
+    <!-- 编辑按钮 -->
+    <php>
+        /*
+        <div class="fixed-action-btn">
+            <a id="edit-btn" href="#edt/topic/add" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">mode_edit</i></a>
+        </div>
+        */
+    </php>
+</div>

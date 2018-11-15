@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>html5 canvas drawing board</title>	
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+	</head>
+
+<body>
+	<input type="hidden" id="hid_color" value="red"/>
+
+	COLOR:<input type="button" value="black" style="background:black" name="btn_color"/>
+	<input type="button" value="red" style="background:red" name="btn_color"/>
+	<input type="button" value="blue" style="background:blue" name="btn_color"/>
+	
+	SIZE:<input type="radio" value="1" name="rad_size" checked="checked"/>1
+	<input type="radio" value="3" name="rad_size"/>3
+	<input type="radio" value="5" name="rad_size"/>5
+	
+	<input type="button" value="Clear" id="btn_clear">
+	<br>
+	
+	<canvas id="mycanvas" style="width:100%; height:500px;border:1px solid blue;">
+		your browser does not support the canvas tag	
+	</canvas>
+</body>
+</html>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+<script>
+
+
+$(function(){
+
+	draw();
+
+	$("[name='btn_color']").click(function(){
+		$("#hid_color").val(this.value);
+		draw();
+	});
+	
+	$("[name='rad_size']").click(function(){
+		draw();
+	});
+
+	$("#btn_clear").click(function(){
+		//用clearRect方法清空画布，
+		document.getElementById('mycanvas').getContext("2d").clearRect(0,0,$("#mycanvas").attr("width"),$("#mycanvas").attr("height"));
+	});
+});
+
+function draw(){
+
+	var drawflag = false;
+	var canvas = document.getElementById('mycanvas');
+	var cxt = canvas.getContext('2d');
+
+	//指定颜色
+	cxt.strokeStyle= $("#hid_color").val(); 
+	//指定尺寸
+	cxt.lineWidth=$("input[name='rad_size']:checked").val();
+
+	//开始绘画
+	canvas.onmousedown = function(event) {
+		drawflag = true;
+		cxt.beginPath();
+		cxt.moveTo(event.clientX, event.clientY);	
+	}
+
+	//结束绘画
+	canvas.onmouseup = function(event) {
+		drawflag = false;
+		cxt.closePath();
+	}
+
+	//鼠标移动,绘画
+	canvas.onmousemove = function(event) {
+		if(drawflag) {
+			cxt.lineTo(event.clientX, event.clientY);
+			cxt.stroke();
+		}
+	}
+}
+
+
+</script>

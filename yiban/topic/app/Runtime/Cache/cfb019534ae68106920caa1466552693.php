@@ -1,0 +1,69 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <?php if($rec): ?><title>我的"手速"在广药内排名第<?php echo ($rec['rank']); ?>,谁能比我更快！</title>
+        <?php else: ?>
+        <title>易班男生节 | 谁是手速王?</title><?php endif; ?>
+    <link rel="stylesheet" href="__PUBLIC__/css/materialize.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/common.materialize.css">
+</head>
+<style>
+    .card .card-content p{
+        line-height: 1.6;
+        font-size: 14px;
+        color: #666666;
+    }
+    .card .card-content .btn{
+        margin-top: 10px;
+    }
+</style>
+<body>
+<div class="container">
+
+    <div class="row">
+        <?php if($rec): $isMe = false; $nick = $rec['nick']; if ($my_userid && $yb_userid == $my_userid) { $isMe = true; $nick = '我'; } ?>
+            <div class="col s12 m12">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title center-align"><?php echo ($nick); ?>的记录</span>
+                        <p><?php echo ($nick); ?>的历史最高分为<b class="red-text"><?php echo ($rec['score']); ?></b>分，在广药内排名第<b class="light-green-text"><?php echo ($rec['rank']); ?></b></p>
+                        <?php if($isMe): ?><a href="<?php echo U('game');?>" class="light-green waves-effect waves-light btn" style="width: 100%">继续挑战</a>
+                            <p style="color: #999999">*点击右上角即可菜单栏>选择"分享到朋友圈" 赶紧去告诉大家吧!</p>
+                            <?php else: ?>
+                            <a href="<?php echo U('game');?>" class="light-green waves-effect waves-light btn" style="width: 100%">去挑战TA</a><?php endif; ?>
+                    </div>
+                </div>
+            </div><?php endif; ?>
+
+        <div class="col s12 m12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title center-align">游戏规则</span>
+
+                    <p>规则类似"打地鼠"游戏，游戏共有9个格子,通过<font class="orange-text text-lighten-1">点击带颜色闪烁的格子</font>，即可获得格子上的分数(格子上的分数有正有负,负数即代表点击后扣取相应的积分)</p>
+
+                    <b>游戏如何结束?</b>
+                    <p>若点击错误次数超过<font class="red-text">3次</font>，游戏立即结束</p>
+
+                    <b>游戏结束之后的分数有什么用？</b>
+                    <p>游戏结束之后，系统会保存该分数，但系统只会选择最高的一次分数放入排行榜中，根据排名即有机会获取<b>机械键盘、mac口红等礼品</b>，详情<a>请戳这里</a></p>
+
+                    <b>如何<font>领取奖品</font>?</b>
+                    <p>活动时间结束之后根据排名,到<a href="http://mp.weixin.qq.com/s/tGcJf0p2iS5wyGoQ69wTwg">广药易班学生工作站值班室</a>即可<font class="orange-text text-lighten-1">领取相应的礼品</font>,详情<a>请戳这里</a></p>
+                    <b>你会是广药手速最快的人吗？快来测试一下吧！</b>
+                    <a href="<?php echo U('game');?>" class="orange lighten-1 waves-effect waves-light btn" style="width: 100%">点击这里，开始游戏</a>
+                    <a href="<?php echo U('rank');?>" class="light-green waves-effect waves-light btn" style="width: 100%">查看广药"手速"排行榜</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row center-align">
+        广东药科大学易班学生工作站提供技术支持
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+<?php	return array ( 0 => 'exgid', 1 => 'name', 2 => 'img', 3 => 'pay', 4 => 'num', 5 => 'status', '_autoinc' => true, '_pk' => 'exgid', '_type' => array ( 'exgid' => 'tinyint(5) unsigned', 'name' => 'varchar(600)', 'img' => 'mediumtext', 'pay' => 'int(11)', 'num' => 'int(11)', 'status' => 'tinyint(1)', ), );?>

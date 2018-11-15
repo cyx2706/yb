@@ -1,0 +1,5 @@
+<form style="display: none" action="https://openapi.yiban.cn/oauth/authorize" method="get">
+    <input name="client_id" value="{:C('YB_APP_ID')}"/>
+    <input name="redirect_uri" data-url="{:C('SERVER_URI')}{:U('Login/usr')}"/>
+    <input name="state" data-val="{:C('YB_LOGIN_STATE')}"/>
+</form>

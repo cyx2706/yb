@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hi</title>
+    <include file="Public:head"/>
+</head>
+<include file="Home:css"/>
+<include file="Edit:css"/>
+<include file="Detail:css"/>
+<body>
+<!-- 主页 -->
+<div id="homePage" class="page-wrapper" data-hash-page="home" data-loader="HomeLoad">
+    <include file="Home:index"/>
+</div>
+
+<!-- 文章 -->
+<div id="detailPage" class="page-wrapper" data-hash-page="detail" data-loader="DetailLoad">
+    <include file="Detail:index"/>
+</div>
+
+<!-- 编辑 -->
+<div id="editPage" class="page-wrapper" data-hash-page="edt" data-loader="EditLoad">
+
+    <php>/* 只有登录成功才会加载 */</php>
+    <if condition="$isLogin eq 1">
+        <include file="Edit:index"/>
+        <else />
+        <include file="Edit:unlog"/>
+    </if>
+
+</div>
+</body>
+<include file="Public:js.src"/>
+<!-- home js -->
+<include file="Home:js"/>
+
+<php>/* 只有登录成功才会加载 */</php>
+<if condition="$isLogin eq 1">
+    <!-- edit js -->
+    <include file="Edit:js"/>
+    <else />
+    <include file="Edit:unlog.js"/>
+</if>
+
+<!-- detail js -->
+<include file="Detail:js"/>
+<!-- init js -->
+<script type="text/javascript">
+    (function ($) {
+        // 当前hash root (全局变量)
+        var lctHash;
+        // 之前的hash root (全局变量)
+        var preHash;
+
+        lctHash = $.getHashRoot();
+
+        $(document).ready(function () {
+            var loadPage = function () {
+                var loader = $('[data-hash-page]')
+                        .filter(function () { return $(this).attr('data-hash-page') == lctHash; })
+                        .show()
+                        .data('loader');
+                if (window[loader]) {
+                    window[loader]();
+                }
+                console.log('loadPage');
+            };
+
+            // 第一次打开页面,对hash进行检查
+            if (!lctHash.length) {
+                location.href = '#home';
+            }
+            else {
+                loadPage();
+                (function () {
+                    var _hashArr =  $.getHashArr();
+                    var _hash =  $.getHash();
+                    switch (lctHash) {
+                        case 'home' :
+                            break;
+                        case 'detail' :
+                            // 第一次打开了detail页面,先跳转到主页,然后
+                            history.replaceState(null,'','#home');
+                            history.pushState(null,'','#'+_hash);
+                            break;
+                        case 'edt' :
+                            switch(_hashArr[1]) {
+                                case 'comment':
+                                    history.replaceState(null,'','#home');
+                                            
+                                    setTimeout(function () {
+                                        history.pushState(null,'','#detail/'+_hashArr[2]+'/'+_hashArr[3]);
+
+                                        history.pushState(null,'','#'+_hash);
+                                    },50);
+                                    break;
+                            }
+                            break;
+                    }
+                })();
+            }
+
+
+
+
+            window.onhashchange = function () {
+
+//                var _url = location.protocol+"//"+location.hostname+location.pathname;
+//                console.log(_url);
+
+                // 获取新的hash值
+                var _hash = $.getHashRoot();
+
+                if (lctHash != _hash) {
+                    // 空的锚点不需要关闭页面
+                    if (lctHash.length > 0) {
+
+                        // 关闭页面
+                        $('[data-hash-page='+lctHash+']').hide();
+                    }
+
+                    // 更新hash
+                    lctHash = _hash;
+
+                    console.log('进入页面:'+lctHash);
+
+                }
+
+                loadPage();
+                console.log('onhashchange');
+            };
+        });
+    })(jQuery)
+
+</script>
+</html>

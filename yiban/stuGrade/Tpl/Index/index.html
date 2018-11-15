@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>易查成绩</title>
+    <!--<link href="https://cdn.bootcss.com/ionic/1.3.2/css/ionic.css" rel="stylesheet">-->
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: "微软雅黑";
+    }
+    body {
+        background-color: #f2f4f3;
+    }
+    .header {
+        background:#ffffff;
+        width: 100%;
+        height:50px;
+        border: 0;
+        box-shadow:0 1px 1px rgba(0,0,0,0.2);
+        position: relative;
+    }
+    .header .title {
+        position: absolute;
+        width: 100%;
+        line-height: 50px;
+        text-align: center;
+        color: #333333;
+    }
+    .content {
+        width: 100%;
+    }
+
+    .list {
+        overflow-x: hidden;
+    }
+    .item {
+        width: 100%;
+        background: #FFFFFF;
+        padding: 16px;
+        color: #666666;
+
+        overflow: hidden;
+        zoom: 1;
+    }
+    .item+.item {
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .item span {
+        float: left;
+    }
+
+    .span1 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+
+        width: 50%;
+    }
+    .span2 {
+        width: 25%;
+    }
+</style>
+<body>
+<div class="header">
+    <div class="title">{:C('START_YEAR')}-{:C('END_YEAR')}第{:C('TERM')}学期成绩(每天凌晨之后更新)</div>
+</div>
+<div class="content list">
+    <!-- has-footer -->
+    <!--标题-->
+    <if condition="$errMsg neq null">
+
+        <!--提示错误-->
+        <div class="item">
+            <font color="#f08080">{$errMsg}</font>
+        </div>
+
+        <else />
+
+        <div class="item" style="color: #999999">
+            <span class="span1">科目</span>
+            <span class="span2">期末成绩</span>
+            <span class="span2">总评成绩</span>
+        </div>
+        <volist name="list" id="vo">
+            <div class="item">
+                <span class="span1">{$vo.subjectName}</span>
+                <span class="span2">
+                <if condition="$vo['grade1'] lt 60">
+                    <font color="#f08080">{$vo.grade1}</font>
+                    <else />
+                    <font color="#20b2aa">{$vo.grade1}</font>
+                </if>
+                </span>
+                <span class="span2">
+                <if condition="$vo['grade2'] lt 60">
+                    <font color="#f08080">{$vo.grade2}</font>
+                    <else />
+                    <font color="#20b2aa">{$vo.grade2}</font>
+                </if>
+                </span>
+            </div>
+        </volist>
+        <div class="item" style="color: lightsalmon;">
+            <!--<span style="width: 100%;">-->
+                请以教务系统成绩为准
+            <!--</span>-->
+        </div>
+    </if>
+	<div style="padding:10px;text-align:center;color:#999999;font-size:15px;">
+		广东药科大学·易班学生工作站<br>
+		提供技术支持
+	</div>
+</div>
+<div style="display: none">
+    test: {$this_yb_userid}-{:strlen($this_yb_userid)}<br/>
+    test: {$this_stu_id}-{:empty($this_stu_id)}<br/>
+    <php>dump($getAT);</php>
+</div>
+</body>
+</html>

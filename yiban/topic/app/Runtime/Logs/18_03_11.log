@@ -1,0 +1,20 @@
+[ 2018-03-11T22:56:58+08:00 ] 183.238.59.168 /yiban/topic/Temp/recruit
+INFO: [ route_check ] --START--
+INFO: CheckRoute Behavior ::run [ RunTime:0.000844s ]
+INFO: [ route_check ] --END-- [ RunTime:0.000937s ]
+NOTIC: [8192] preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead /webdata/ThinkPHP_3_1_3/Lib/Core/Dispatcher.class.php 第 132 行.
+INFO: [ app_begin ] --START--
+INFO: ReadHtmlCache Behavior ::run [ RunTime:0.000475s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000521s ]
+ERR: 非法操作:recruit
+
+[ 2018-03-11T22:57:57+08:00 ] 61.151.178.174 /yiban/topic/Temp/recruit
+INFO: [ route_check ] --START--
+INFO: CheckRoute Behavior ::run [ RunTime:0.000485s ]
+INFO: [ route_check ] --END-- [ RunTime:0.000561s ]
+NOTIC: [8192] preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead /webdata/ThinkPHP_3_1_3/Lib/Core/Dispatcher.class.php 第 132 行.
+INFO: [ app_begin ] --START--
+INFO: ReadHtmlCache Behavior ::run [ RunTime:0.000318s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000362s ]
+ERR: 非法操作:recruit
+

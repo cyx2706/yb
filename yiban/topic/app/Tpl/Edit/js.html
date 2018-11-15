@@ -1,0 +1,156 @@
+<script>
+    (function ($) {
+        var module = '';
+        EditLoad = function() {
+            var _hashArr  = $.getHashArr();
+            module = _hashArr[1];
+            $("#editPage .editor").hide();
+            var moduleWrapper = "#editPage #"+module+"-editor";
+            $(moduleWrapper).show();
+
+            switch (module) {
+                case 'topic':
+                    switch (_hashArr[2]) {
+                        case 'add':
+                            $(moduleWrapper+" form").data('action',"{:U('Topic/add')}");
+                            break;
+                    }
+                    break;
+
+                case 'comment':
+                    $(moduleWrapper+" form").data('action',"{:U('Comment/add')}");
+
+                    // 如果是话题的话
+                    switch(_hashArr[2]) {
+                        case 'topic':
+                            $(moduleWrapper+" form").find("input[name='tid']").val(_hashArr[3]);
+                            break;
+                        case 'lives':
+                            $(moduleWrapper+" form").find("input[name='lid']").val(_hashArr[3]);
+                            break;
+                    }
+
+                    // 生活圈不一样
+                    break;
+
+                case 'lives':
+                    $(moduleWrapper+" form").data('action',"{:U('Lives/add')}");
+                    break;
+            }
+
+            console.log('EditLoad');
+        };
+
+        $(document).ready(function () {
+
+            var uploaderWrapperHTML =
+                    '<div class="uploader-wrapper">' +
+                    '<span class="btn-floating btn-small del-img red">×</span>' +
+                    '<label class="uploader"></label>' +
+                    '</div>';
+
+
+            $(".edit-area .input-field input[type!='file'],.edit-area .input-field textarea")
+                    .focus(function () {
+                        $('#editPage #edit-sub').hide();
+                        var $edit_area = $(this).closest('.edit-area').prevAll();
+                        var scrollTop = 0;
+                        $edit_area.each(function () {
+                            scrollTop +=
+                                    $(this).height()
+                                    + parseInt($(this).css('padding-top').replace(/[^0-9]*/,''));
+                                    + parseInt($(this).css('padding-bottom').replace(/[^0-9]*/,''));
+                                    + parseInt($(this).css('margin-top').replace(/[^0-9]*/,''));
+                                    + parseInt($(this).css('margin-bottom').replace(/[^0-9]*/,''));
+                        });
+                        $(document).scrollTop(scrollTop);
+                    })
+                    .blur(function () {
+                        $('#editPage #edit-sub').fadeIn(500);
+                    });
+
+            $('#comment-editor .upload-cancel').click(function () {
+                var fileInput = $("#comment-editor input[type='file']").get(0);
+                // for IE, Opera, Safari, Chrome
+                if (fileInput.outerHTML) {
+                    fileInput.outerHTML = fileInput.outerHTML;
+                } else { // FF(包括3.5)
+                    fileInput.value = "";
+                }
+                // 清空显示的text input
+                $("#comment-editor .file-path-wrapper input").val('');
+            });
+
+
+            var ajaxLock = false;
+            $('#editPage #edit-sub').click(function () {
+
+                var _form = $("#editPage #"+module+"-editor form");
+                console.log(_form.data());
+                Materialize.toast('正在提交中,稍等一下就好~', 2000);
+                if ( !ajaxLock ) {
+                    ajaxLock = true;
+                    var formData = new FormData();
+
+                    _form.find('input,textarea')
+                            .filter(function () { return $(this).attr('name') }).each(function () {
+                        var val;
+                        if ($(this).attr('type') == 'file') {
+                            val = $(this).get(0).files[0];
+                            // 如果没有上传文件就不需要算入
+                            if (!val) return;
+                        }
+                        else {
+                            val = $(this).val();
+                        }
+                        formData.append($(this).attr('name'),val);
+                    });
+
+                    var editHash = $.getHash();
+
+                    $.ajax({
+                        url : _form.data('action'),
+                        type : 'POST',
+                        data : formData,
+                        dataType:'json',
+                        // jQuery不处理发送的数据
+                        processData : false,
+                        // 不设置Content-Type请求头
+                        contentType : false,
+                        success : function(obj) {
+                            console.log(obj);
+                            // 提示失败原因
+                            if (obj.status == 0 || obj.status == false) {
+                                Materialize.toast('<font class="red-text">'+obj.info+'</font>', 2000);
+                            }
+                            // 提交成功
+                            else {
+                                // 刷新评论
+                                $('#flush-comments').click();
+
+                                // 如果还在编辑页面,那么就回退
+                                if (editHash == $.getHash()) {
+                                    history.back();
+                                }
+
+                                // 提示成功
+                                Materialize.toast('<font class="green-text">'+obj.info+'</font>', 2000);
+
+                            }
+                        },
+                        error : function(obj) {
+                            console.log(obj.responseText);
+                        },
+                        complete:function () {
+                            ajaxLock = false;
+                        }
+                    });
+                }
+
+            });
+
+
+        });
+    })(jQuery);
+
+</script>
