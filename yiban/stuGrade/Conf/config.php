@@ -14,7 +14,7 @@ return array(
     //自定义的
     'YB_APP_ID'     => 'bef6c8668054339e',
     'YB_APP_SEC'    => '05c14ab2114901e664d1702619356713',
-    'YB_APP_CB_URL' => 'http://120.24.45.27/yiban/stuGrade.php',
+    'YB_APP_CB_URL' => 'http://www.gdpuyiban.com/stuGrade.php',
 
     'START_YEAR'    => 2017,
     'END_YEAR'      => 2018,
