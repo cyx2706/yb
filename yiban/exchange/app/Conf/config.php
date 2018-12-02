@@ -18,8 +18,8 @@ return array(
     'DB_PREFIX'             => NULL,		    // 数据库表前缀
     'DB_SUFFIX'             => NULL,      // 数据库表后缀
 
-    // URL 重写模式
-    'URL_MODEL'             => 2,
+    // URL 重写模式 设置为兼容模式
+    'URL_MODEL'             => 3,
 
 
     //自定义的
