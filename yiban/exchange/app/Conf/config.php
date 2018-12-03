@@ -27,10 +27,10 @@ return array(
     'YB_APP_SEC'            => 'cf1f471ccdee25fc31f3e206c6b88e43',
 
     'YB_LOGIN_STATE'        => 'EXCH',
-    'YB_CB_URL'             => 'http://www.quickprint.net.cn/yiban/exchange',
+    'YB_CB_URL'             => 'http://www.gdpuyiban.com/exchange',
 
-    'SERVER_ROOT'           => 'http://www.quickprint.net.cn/yiban/exchange',
-    'SERVER_URI'            => 'http://www.quickprint.net.cn',
+    'SERVER_ROOT'           => 'http://www.gdpuyiban.com/exchange',
+    'SERVER_URI'            => 'http://www.gdpuyiban.com',
 
     // 是否为设备维护
     'APP_MAINTENANCE'       => false,
